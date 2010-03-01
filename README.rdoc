@@ -2,4 +2,4 @@
 
 DRY ActiveRecord language support!
 
-<tt>has_many_translations</tt>[http://github.com/opengotham/has_many_translations] 
+<tt>has_many_translations</tt>[http://github.com/Artforge/has_many_translations] 
