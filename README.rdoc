@@ -1,0 +1,5 @@
+= has_many_translations
+
+DRY ActiveRecord language support!
+
+<tt>has_many_translations</tt>[http://github.com/opengotham/has_many_translations] 
