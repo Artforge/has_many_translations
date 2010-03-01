@@ -8,7 +8,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |g|
     g.name = 'has_many_translations'
-    g.summary = %(Keep a DRY multilingual translation of your ActiveRecord models' textual attributes)
+    g.summary = %(Makes models'' speak in tongues)
     g.description = %(Keep a DRY multilingual translation of your ActiveRecord models' textual attributes)
     g.email = 'mjording@openogotham.com'
     g.homepage = 'http://github.com/opengotham/has_many_translations'

@@ -1,5 +1,5 @@
 = has_many_translations
 
-DRY ActiveRecord language support!
+Makes models speak in tongues!
 
 <tt>has_many_translations</tt>[http://github.com/Artforge/has_many_translations] 
