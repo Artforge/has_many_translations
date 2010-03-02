@@ -10,14 +10,14 @@ module HasManyTranslations
     end
   end
   module ClassMethods
-    def translated(options = {}, &block)
-      return if translated?
+    def has_translations(options = {}, &block)
+      return if has_translations?
       #included modules
       include Options
       include Translated
       
       
-      prepare_translated_options(options)
+      prepare_has_translations_options(options)
       has_many :translations, options, &block
     end
     

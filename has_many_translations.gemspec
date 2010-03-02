@@ -15,11 +15,26 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
+  s.files = [
+    ".gitignore",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION",
+     "generators/has_many_translations/has_many_translations_generator.rb",
+     "generators/has_many_translations/templates/create_translations.rb",
+     "generators/has_many_translations/templates/initializer.rb",
+     "has_many_translations.gemspec",
+     "init.rb",
+     "lib/has_many_translations.rb",
+     "lib/has_many_translations/options.rb",
+     "lib/has_many_translations/translate.rb",
+     "lib/has_many_translations/translations.rb"
+  ]
   s.homepage = %q{http://github.com/opengotham/has_many_translations}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
+  s.summary = %q{Makes models'' speak in tongues}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION

@@ -4,6 +4,6 @@ HasManyTranslations.configure do |config|
   #
   # config.class_name = "MyCustomVersion"
   #
-  # Any options passed to the "translated" method in the model itself will override this global
+  # Any options passed to the "has_translations" method in the model itself will override this global
   # configuration.
 end

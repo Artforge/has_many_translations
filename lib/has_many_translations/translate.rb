@@ -1,5 +1,5 @@
 module HasManyTranslations
-  # Adds the functionality necessary for translation actions on a translated instance of
+  # Adds the functionality necessary for translation actions on a has_translations instance of
   # ActiveRecord::Base.
   module Translate
     def self.included(base) # :nodoc:
@@ -10,17 +10,17 @@ module HasManyTranslations
         after_update :create_translation, :if => :create_translation?
 
         class << self
-          alias_method_chain :prepare_translated_options, :creation
+          alias_method_chain :prepare_has_translations_options, :creation
         end
       end
     end
     
     # Class methods added to ActiveRecord::Base to facilitate the creation of new translations.
     module ClassMethods
-      # Overrides the basal +prepare_translated_options+ method defined in HasManyTranslations::Options
+      # Overrides the basal +prepare_has_translations_options+ method defined in HasManyTranslations::Options
       # to extract the <tt>:only</tt> and <tt>:except</tt> options into +has_many_translations_options+.
-      def prepare_translated_options_with_creation(options)
-        result = prepare_translated_options_without_creation(options)
+      def prepare_has_translations_options_with_creation(options)
+        result = prepare_has_translations_options_without_creation(options)
 
         self.has_many_translations_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
         self.has_many_translations_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
@@ -64,13 +64,14 @@ module HasManyTranslations
         # translations. If <tt>has_many_translations_options[:only]</tt> is specified, only those columns
         # will be translationed. Otherwise, if <tt>has_many_translations_options[:except]</tt> is specified,
         # all columns will be translationed other than those specified. Without either option, the
-        # default is to translation all columns. At any rate, the four "automagic" timestamp columns
-        # maintained by Rails are never translationed.
-        def translationed_columns
+        # default is to translation all text & string columns. At any rate, the four "automagic" timestamp 
+        # columns maintained by Rails are never translationed.
+        def has_translations_columns
           case
-            when has_many_translations_options[:only] then self.class.column_names & has_many_translations_options[:only]
-            when has_many_translations_options[:except] then self.class.column_names - has_many_translations_options[:except]
-            else self.class.column_names
+            textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
+            when has_many_translations_options[:only] then textual_columns & has_many_translations_options[:only]
+            when has_many_translations_options[:except] then textual_columns - has_many_translations_options[:except]
+            else textual_columns
           end - %w(created_at created_on updated_at updated_on)
         end
 
