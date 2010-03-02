@@ -26,8 +26,11 @@ Gem::Specification.new do |s|
      "has_many_translations.gemspec",
      "init.rb",
      "lib/has_many_translations.rb",
+     "lib/has_many_translations/configuration.rb",
      "lib/has_many_translations/options.rb",
      "lib/has_many_translations/translate.rb",
+     "lib/has_many_translations/translated.rb",
+     "lib/has_many_translations/translation.rb",
      "lib/has_many_translations/translations.rb"
   ]
   s.homepage = %q{http://github.com/opengotham/has_many_translations}
