@@ -10,7 +10,7 @@ module HasManyTranslations
         after_update :create_translation, :if => :create_translation?
 
         class << self
-          alias_method_chain :prepare_has_translations_options, :creation
+          alias_method_chain :prepare_has_many_translations_options, :creation
         end
       end
     end
@@ -19,11 +19,11 @@ module HasManyTranslations
     module ClassMethods
       # Overrides the basal +prepare_has_translations_options+ method defined in HasManyTranslations::Options
       # to extract the <tt>:only</tt> and <tt>:except</tt> options into +has_many_translations_options+.
-      def prepare_has_translations_options_with_creation(options)
-        result = prepare_has_translations_options_without_creation(options)
+      def prepare_has_many_translations_options_with_creation(options)
+        result = prepare_has_many_translations_options_without_creation(options)
 
-        self.has_many_translations_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
-        self.has_many_translations_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
+        self.has_many_translations_options_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
+        self.has_many_translations_options_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
 
         result
       end
@@ -40,8 +40,8 @@ module HasManyTranslations
         # Creates a new translation upon updating the parent record.
         def create_translation
           translation.create(translation_attributes)
-          reset_translation_changes
-          reset_translation
+          #reset_translation_changes
+          #reset_translation
         end
 
         # Returns whether the last translation should be updated upon updating the parent record.
@@ -56,8 +56,8 @@ module HasManyTranslations
           return create_translation unless t = translations.last
           t.changes_will_change!
           t.update_attribute(:changes, t.changes.append_changes(translation_changes))
-          reset_translation_changes
-          reset_translation
+          #reset_translation_changes
+          #reset_translation
         end
 
         # Returns an array of column names that should be included in the changes of created
@@ -66,20 +66,20 @@ module HasManyTranslations
         # all columns will be translationed other than those specified. Without either option, the
         # default is to translation all text & string columns. At any rate, the four "automagic" timestamp 
         # columns maintained by Rails are never translationed.
-        def has_translations_columns
+        def translated_columns
           case
             textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
-            when has_many_translations_options[:only] then textual_columns & has_many_translations_options[:only]
-            when has_many_translations_options[:except] then textual_columns - has_many_translations_options[:except]
+            when translated_options[:only] then textual_columns & translated_options[:only]
+            when translated_options[:except] then textual_columns - translated_options[:except]
             else textual_columns
           end - %w(created_at created_on updated_at updated_on)
         end
 
         # Specifies the attributes used during translation creation. This is separated into its own
         # method so that it can be overridden by the HasManyTranslations::Users feature.
-        def translation_attributes
-          {:changes => translation_changes, :number => last_translation + 1}
-        end
+        # def translation_attributes
+        #           {:changes => translation_changes, :number => last_translation + 1}
+        #         end
     end
-  
+  end
 end

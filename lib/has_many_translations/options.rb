@@ -21,14 +21,20 @@ module HasManyTranslations
       #
       # The method is overridden in feature modules that require specific options outside the
       # standard +has_many+ associations.
-      def prepare_has_translations_options(options)
+      def prepare_translated_options(options)
         options.symbolize_keys!
-
+        options.reverse_merge!(
+          :class_name => 'HasManyTranslations::Translation',
+          :dependent => :delete_all
+        )
+        options.reverse_merge!(
+          :order => "#{options[:class_name].constantize.table_name}.number ASC"
+        )
         class_inheritable_accessor :has_many_translations_options
         self.has_many_translations_options = options.dup
 
         options.merge!(
-          :as => :has_translations,
+          :as => :translated,
           :extend => Array(options[:extend]).unshift(Translations)
         )
       end

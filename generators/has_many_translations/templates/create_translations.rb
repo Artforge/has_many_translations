@@ -1,7 +1,7 @@
 class CreateTranslations < ActiveRecord::Migration
   def self.up
     create_table :translations do |t|
-      t.belongs_to :has_translations, :polymorphic => true
+      t.belongs_to :translated, :polymorphic => true
       t.string :language
       t.string :attribute
       t.text :translation
@@ -9,7 +9,7 @@ class CreateTranslations < ActiveRecord::Migration
     end
 
     change_table :translations do |t|
-      t.index [:has_translations_id, :has_translations_type]
+      t.index [:translated_id, :translated_type]
       t.index :language
       t.index :attribute
       t.index :created_at

@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_many_translations}
-  s.version = "0.1.1"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["opengotham"]
-  s.date = %q{2010-03-01}
+  s.date = %q{2010-03-02}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
   s.email = %q{mjording@openogotham.com}
   s.extra_rdoc_files = [
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Makes models'' speak in tongues}
+  s.summary = %q{Makes models' speak in tongues}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
