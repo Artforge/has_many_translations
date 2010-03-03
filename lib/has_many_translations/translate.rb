@@ -66,11 +66,11 @@ module HasManyTranslations
         # all columns will be translationed other than those specified. Without either option, the
         # default is to translation all text & string columns. At any rate, the four "automagic" timestamp 
         # columns maintained by Rails are never translationed.
-        def translated_columns
+        def in_tongues_columns
           case
             textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
-            when translated_options[:only] then textual_columns & translated_options[:only]
-            when translated_options[:except] then textual_columns - translated_options[:except]
+            when in_tongues_options[:only] then textual_columns & in_tongues_options[:only]
+            when in_tongues_options[:except] then textual_columns - in_tongues_options[:except]
             else textual_columns
           end - %w(created_at created_on updated_at updated_on)
         end

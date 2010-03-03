@@ -21,7 +21,7 @@ module HasManyTranslations
       #
       # The method is overridden in feature modules that require specific options outside the
       # standard +has_many+ associations.
-      def prepare_translated_options(options)
+      def prepare_in_tongues_options(options)
         options.symbolize_keys!
         options.reverse_merge!(
           :class_name => 'HasManyTranslations::Translation',
@@ -34,7 +34,7 @@ module HasManyTranslations
         self.has_many_translations_options = options.dup
 
         options.merge!(
-          :as => :translated,
+          :as => :in_tongues,
           :extend => Array(options[:extend]).unshift(Translations)
         )
       end
