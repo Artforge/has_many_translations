@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["opengotham"]
-  s.date = %q{2010-03-02}
+  s.date = %q{2010-03-03}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
   s.email = %q{mjording@openogotham.com}
   s.extra_rdoc_files = [
@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "generators/has_many_translations/has_many_translations_generator.rb",
-     "generators/has_many_translations/templates/create_translations.rb",
      "generators/has_many_translations/templates/initializer.rb",
+     "generators/has_many_translations/templates/migration.rb",
      "has_many_translations.gemspec",
      "init.rb",
      "lib/has_many_translations.rb",
