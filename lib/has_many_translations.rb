@@ -6,16 +6,15 @@ module HasManyTranslations
   def self.included(base) # :nodoc:
     base.class_eval do
       extend ClassMethods
-      extend InTongues
+      extend Translated
     end
   end
   module ClassMethods
     def translated(options = {}, &block)
-      return if in_tongues?
-      #included modules
+      return if translated?
       include Options
       
-      prepare_in_tongues_options(options)
+      prepare_translated_options(options)
       has_many :translations, options, &block
     end
     

@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_many_translations}
-  s.version = "0.1.3"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["opengotham"]
-  s.date = %q{2010-03-03}
+  s.date = %q{2010-03-13}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
   s.email = %q{mjording@openogotham.com}
   s.extra_rdoc_files = [

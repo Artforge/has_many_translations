@@ -4,7 +4,7 @@ module HasManyTranslations
     # Returns all translations for given language. 
     
     def by_lang(lang)
-      all(:conditions => "#{aliased_table_name}.language eq '#{lang}'")
+      all(:conditions => "#{aliased_table_name}.locale_id eq '#{locale}'")
     end
   end
   
