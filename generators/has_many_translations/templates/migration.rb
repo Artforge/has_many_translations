@@ -16,8 +16,8 @@ class CreateTranslations < ActiveRecord::Migration
       
       t.timestamps
     end
-    add_index :translations, [:locale_id, :key, t.index :attribute, :pluralization_index]
-    
+    add_index :translations, [:locale_id, :key, :pluralization_index]
+    add_index :translations, [:locale_id, :attribute]
     
     change_table :users do |t|
       add_column :users, :prefered_language, :string
@@ -25,7 +25,9 @@ class CreateTranslations < ActiveRecord::Migration
   end
 
   def self.down
+    drop_table :locales
     drop_table :translations
+    #drop_table :asset_translations
     remove_column :users, :prefered_language
   end
 end

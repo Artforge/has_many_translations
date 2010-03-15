@@ -1,7 +1,7 @@
 module HasManyTranslations
   # Adds the functionality necessary for translation actions on a has_translations instance of
   # ActiveRecord::Base.
-  module Translate
+  module Creation
     def self.included(base) # :nodoc:
       base.class_eval do
         extend ClassMethods
@@ -10,7 +10,7 @@ module HasManyTranslations
         after_update :create_translation, :if => :create_translation?
 
         class << self
-          alias_method_chain :prepare_has_many_translations_options, :creation
+          alias_method_chain :prepare_translated_options, :creation
         end
       end
     end
@@ -19,8 +19,8 @@ module HasManyTranslations
     module ClassMethods
       # Overrides the basal +prepare_has_translations_options+ method defined in HasManyTranslations::Options
       # to extract the <tt>:only</tt> and <tt>:except</tt> options into +has_many_translations_options+.
-      def prepare_has_many_translations_options_with_creation(options)
-        result = prepare_has_many_translations_options_without_creation(options)
+      def prepare_translated_options_with_creation(options)
+        result = prepare_translated_options_without_creation(options)
 
         self.has_many_translations_options_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
         self.has_many_translations_options_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
@@ -66,11 +66,11 @@ module HasManyTranslations
         # all columns will be translationed other than those specified. Without either option, the
         # default is to translation all text & string columns. At any rate, the four "automagic" timestamp 
         # columns maintained by Rails are never translationed.
-        def in_tongues_columns
+        def translated_columns
           case
             textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
-            when in_tongues_options[:only] then textual_columns & in_tongues_options[:only]
-            when in_tongues_options[:except] then textual_columns - in_tongues_options[:except]
+            when translated_options[:only] then textual_columns & translated_options[:only]
+            when translated_options[:except] then textual_columns - translated_options[:except]
             else textual_columns
           end - %w(created_at created_on updated_at updated_on)
         end

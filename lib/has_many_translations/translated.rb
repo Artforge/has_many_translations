@@ -20,7 +20,7 @@ module HasManyTranslations
       end
     end
 
-    # For all ActiveRecord::Base models that do not call the +has_translations+ method, the +has_translations?+
+    # For all ActiveRecord::Base models that do not call the +translated?+ method, the +has_translations?+
     # method will return false.
     def translated?
       false
