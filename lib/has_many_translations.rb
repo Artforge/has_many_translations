@@ -15,7 +15,7 @@ module HasManyTranslations
       
       include Options
       include Creation
-      
+      #include Control
       
       prepare_translated_options(options)
       has_many :translations, options, &block

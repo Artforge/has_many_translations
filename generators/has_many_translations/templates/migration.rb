@@ -7,17 +7,14 @@ class CreateTranslations < ActiveRecord::Migration
     add_index :locales, :code
     create_table :translations do |t|
       t.belongs_to :translated, :polymorphic => true
-      t.string   :key
-      t.text     :raw_key
       t.string   :attribute
       t.text     :value
-      t.integer  :pluralization_index, :default => 1
       t.integer  :locale_id
       
       t.timestamps
     end
-    add_index :translations, [:locale_id, :key, :pluralization_index]
     add_index :translations, [:locale_id, :attribute]
+    add_index :translations, [:translated_id, :translated_type]
     
     change_table :users do |t|
       add_column :users, :prefered_language, :string

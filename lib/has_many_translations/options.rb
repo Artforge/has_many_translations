@@ -28,9 +28,6 @@ module HasManyTranslations
           :class_name => 'HasManyTranslations::Translation',
           :dependent => :delete_all
         )
-        options.reverse_merge!(
-           :order => "#{options[:class_name].constantize.table_name}"
-         )
         class_inheritable_accessor :has_many_translations_options
         self.has_many_translations_options = options.dup
 

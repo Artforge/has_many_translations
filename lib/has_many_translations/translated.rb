@@ -11,7 +11,8 @@ module HasManyTranslations
     # Overrides the +has_translations+ method to first define the +has_translations?+ class method before
     # deferring to the original +has_translations+.
     def translated_with_flag(*args)
-      translated_without_flag(*args)
+      #not sure why this was in vestal removing for the moment
+      translated_without_flag(*args)  
 
       class << self
         def translated?
