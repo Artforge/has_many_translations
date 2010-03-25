@@ -1,6 +1,8 @@
 module HasManyTranslations
   # Provides +has_translations+ options conversion and cleanup.
+  
   module Options
+    
     def self.included(base) # :nodoc:
       base.class_eval do
         extend ClassMethods
@@ -15,7 +17,7 @@ module HasManyTranslations
       # 3. Save user-configurable options in a class-level variable
       #
       # Options are given priority in the following order:
-      # 1. Those passed directly to the +has_translations+ method
+      # 1. Those passed directly to the +translated+ method
       # 2. Those specified in an initializer +configure+ block
       # 3. Default values specified in +prepare_has_translations_options+
       #

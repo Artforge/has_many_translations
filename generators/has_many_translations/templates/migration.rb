@@ -1,19 +1,21 @@
 class CreateTranslations < ActiveRecord::Migration
-  def self.up
-    create_table :locales do |t|
-      t.string   :code
-      t.string   :name
-    end
-    add_index :locales, :code
+  def self.up    # 
+    # create_table :locales do |t|
+    #   t.string   :code
+    #   t.string   :name
+    #   t.string   :google_code
+    # end
+    # add_index :locales, :code
     create_table :translations do |t|
       t.belongs_to :translated, :polymorphic => true
       t.string   :attribute
       t.text     :value
-      t.integer  :locale_id
-      
+      t.string   :locale_code
+      t.string   :locale_name
+      t.string   :origin_locale_code
       t.timestamps
     end
-    add_index :translations, [:locale_id, :attribute]
+    add_index :translations, [:locale_code, :attribute]
     add_index :translations, [:translated_id, :translated_type]
     
     change_table :users do |t|
@@ -24,7 +26,6 @@ class CreateTranslations < ActiveRecord::Migration
   def self.down
     drop_table :locales
     drop_table :translations
-    #drop_table :asset_translations
     remove_column :users, :prefered_language
   end
 end
