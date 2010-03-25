@@ -13,6 +13,7 @@ class CreateTranslations < ActiveRecord::Migration
       t.string   :locale_code
       t.string   :locale_name
       t.string   :origin_locale_code
+      t.boolean  :machine_translation
       t.timestamps
     end
     add_index :translations, [:locale_code, :attribute]

@@ -6,7 +6,8 @@ module HasManyTranslations
       base.class_eval do
         extend ClassMethods
         include InstanceMethods
-
+        before_update :update_translation?
+ 
         after_save :update_translations!
         class << self
           alias_method_chain :prepare_translated_options, :creation
@@ -31,11 +32,18 @@ module HasManyTranslations
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
       #private
-      
-        def hmt_default_locale
-          return default_locale.to_sym if respond_to?(:default_locale)
-          return self.class.default_locale.to_sym if self.class.respond_to?(:default_locale)
-          I18n.default_locale
+        def localize=(loc)
+          @locale = loc
+        end
+        # def hmt_default_locale
+        #         return default_locale.to_sym if respond_to?(:default_locale)
+        #         return self.class.default_locale.to_sym if self.class.respond_to?(:default_locale)
+        #         I18n.default_locale
+        #       end
+        def hmt_locale
+          return self.locale.to_sym if respond_to?(:locale)
+          return self.class.locale.to_sym if self.class.respond_to?(:locale)
+          I18n.locale
         end
        
         # Returns whether a new translation should be created upon updating the parent record.
@@ -70,26 +78,34 @@ module HasManyTranslations
         def update_translations!
            translated_columns.each do |attrib|
               self.locales.each do |loc|
-                  update_translation(attrib, loc)
-              
+                  update_translation(attrib, loc, self.hmt_locale)
               end
            end
         end
         
         def update_translation?
-          false
+          unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale
+            dirty_translations = self.translations.all(:conditions => {:translated_id => self.id, :locale_code => self.hmt_locale)
+            dirty_translations.each do |dt|
+              dt.value = try(dt.attribute)
+              dt.save
+            end
+            return false
+          end
         end
 
         # Updates the last translation's changes by appending the current translation changes.
-        def update_translation(attribute, loc)
+        def update_translation(attribute, loc, origin_locale)
           unless translations.first(:conditions => {:attribute => attribute, :locale_code => loc.to_s})
-            update_translation!(attribute, loc)
+            update_translation!(attribute, loc, origin_locale)
           end
         end
-        def update_translation!(attribute, loc)
-           translated_value = Translate.t(try(attribute), "en", loc.to_s)
-           translations.create(:attribute => attribute, :locale_code => loc.to_s, :value => translated_value, :locale_name => Google::Language::Languages[loc.to_s])
+        def update_translation!(attribute, loc, origin_locale)
+           translated_value = Translate.t(try(attribute), origin_locale, loc.to_s)
+           translations.create(:attribute => attribute, :locale_code => loc.to_s, :value => translated_value, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale)
         end
+        
+        
         # Returns an array of column names that should be included in the translation  
         # If <tt>has_many_translations_options[:only]</tt> is specified, only those columns
         # will be translationed. Otherwise, if <tt>has_many_translations_options[:except]</tt> is specified,
@@ -107,7 +123,7 @@ module HasManyTranslations
 
         def queue_translations
          # Resque.enqueue(Jobs::MachineTranslationJob.new(self.id, self.type))
-         job = Jobs::MachineTranslationJob.new(self.id, self.type)
+         job = Jobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
           locales = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
