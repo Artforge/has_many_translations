@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/has_many_translations/configuration.rb",
      "lib/has_many_translations/control.rb",
      "lib/has_many_translations/creation.rb",
+     "lib/has_many_translations/jobs.rb",
      "lib/has_many_translations/options.rb",
      "lib/has_many_translations/translated.rb",
      "lib/has_many_translations/translation.rb",
