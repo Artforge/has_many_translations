@@ -18,7 +18,7 @@ module HasManyTranslations
         def translated?
           true
         end
-        
+       
       end
     end
 
@@ -27,6 +27,7 @@ module HasManyTranslations
     def translated?
       false
     end
+    
     
     
     

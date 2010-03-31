@@ -17,9 +17,27 @@ module HasManyTranslations
     
     # Class methods added to ActiveRecord::Base to facilitate the creation of new translations.
     module ClassMethods
+      
       # Overrides the basal +prepare_has_translations_options+ method defined in HasManyTranslations::Options
       # to extract the <tt>:only</tt> and <tt>:except</tt> options into +has_many_translations_options+.
       def prepare_translated_options_with_creation(options)
+        self.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact.each{|name|
+          #alias_method "#{name}_before_translation", name.to_sym
+          define_method name, lambda { |*args|
+            #
+            unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale
+              self.translations.first(:conditions => {:locale_code => self.hmt_locale})
+              #self.hmt_locale
+            else
+              #self.id
+              read_attribute(name.to_sym)
+              #try(name)
+            end
+            #HasManyTranslations.fetch(args.first || self.class.locale || I18n.locale, name)
+          }
+          alias_method "#{name}_before_type_cast", name
+        }
+        
         result = prepare_translated_options_without_creation(options)
 
         self.has_many_translations_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
@@ -27,11 +45,13 @@ module HasManyTranslations
         self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         result
       end
+      
     end
 
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
       #private
+      
         def localize=(loc)
           @locale = loc
         end
@@ -85,7 +105,7 @@ module HasManyTranslations
         
         def update_translation?
           unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale
-            dirty_translations = self.translations.all(:conditions => {:translated_id => self.id, :locale_code => self.hmt_locale)
+            dirty_translations = self.translations.all(:conditions => {:translated_id => self.id, :locale_code => self.hmt_locale})
             dirty_translations.each do |dt|
               dt.value = try(dt.attribute)
               dt.save
@@ -101,7 +121,7 @@ module HasManyTranslations
           end
         end
         def update_translation!(attribute, loc, origin_locale)
-           translated_value = Translate.t(try(attribute), origin_locale, loc.to_s)
+           translated_value = Translate.t(try(attribute), origin_locale.to_s, loc.to_s)
            translations.create(:attribute => attribute, :locale_code => loc.to_s, :value => translated_value, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale)
         end
         

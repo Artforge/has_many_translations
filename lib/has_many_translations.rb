@@ -4,6 +4,8 @@ require 'rtranslate'
 # The base module that gets included in ActiveRecord::Base. See the documentation for
 # HasManyTranslations::ClassMethods for more useful information.
 module HasManyTranslations
+  
+  
   def self.included(base) # :nodoc:
     base.class_eval do
       extend ClassMethods
