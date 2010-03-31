@@ -17,6 +17,7 @@ begin
     g.add_development_dependency 'shoulda'
     g.add_development_dependency 'mocha'
     g.add_runtime_dependency 'sishen-rtranslate'
+    g.add_runtime_dependency 'activequeue'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

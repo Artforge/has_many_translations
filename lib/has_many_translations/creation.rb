@@ -96,11 +96,14 @@ module HasManyTranslations
         # This method is overridden in HasManyTranslations::Control to account for a control block that
         # merges changes onto the previous translation.
         def update_translations!
-           translated_columns.each do |attrib|
+           #translated_columns.each do |attrib|
               self.locales.each do |loc|
-                  update_translation(attrib, loc, self.hmt_locale)
+                  # put this in a option check blog to determine if the job should be queued? 
+                  queue_translation(loc)
+                  #ActiveQueue::Queue.enqueue(TranlationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
+                  #update_all_attributes_translation(loc, self.hmt_locale)
               end
-           end
+           #end
         end
         
         def update_translation?
@@ -114,6 +117,11 @@ module HasManyTranslations
           end
         end
 
+        def update_all_attributes_translation(loc, origin_locale)
+          translated_columns.each do |attrib|
+            update_translation(attrib, loc, origin_locale)
+          end
+        end
         # Updates the last translation's changes by appending the current translation changes.
         def update_translation(attribute, loc, origin_locale)
           unless translations.first(:conditions => {:attribute => attribute, :locale_code => loc.to_s})
@@ -140,10 +148,16 @@ module HasManyTranslations
             else textual_columns
           end - %w(created_at created_on updated_at updated_on)
         end
-
+        def queue_translation(loc)
+         # Resque.enqueue(TranlationJobs::MachineTranslationJob.new(self.id, self.type))
+          ActiveQueue::Queue.enqueue(TranlationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
+          
+          #job = TranlationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
+        end
         def queue_translations
-         # Resque.enqueue(Jobs::MachineTranslationJob.new(self.id, self.type))
-         job = Jobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
+         # Resque.enqueue(TranlationJobs::MachineTranslationJob.new(self.id, self.type))
+          ActiveQueue::Queue.enqueue(TranlationJobs::MachineTranslationJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale})
+          #job = TranlationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
           locales = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
