@@ -19,7 +19,7 @@ module HasManyTranslations
       return if translated?
       
       include Options
-      include Jobs
+      include TranslationJobs
       include Creation
       include Translations
       #include Control

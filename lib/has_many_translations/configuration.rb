@@ -23,4 +23,5 @@ module HasManyTranslations
       end
     end 
   end
+  
 end

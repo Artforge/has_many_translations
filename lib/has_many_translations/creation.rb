@@ -26,7 +26,8 @@ module HasManyTranslations
           define_method name, lambda { |*args|
             #
             unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale
-              self.translations.first(:conditions => {:locale_code => self.hmt_locale})
+              trans = self.translations.first(:conditions => {:locale_code => self.hmt_locale, :attribute => name})
+              val = trans.nil? ? nil : trans.value
               #self.hmt_locale
             else
               #self.id
@@ -61,9 +62,8 @@ module HasManyTranslations
         #         I18n.default_locale
         #       end
         def hmt_locale
-          return self.locale.to_sym if respond_to?(:locale)
-          return self.class.locale.to_sym if self.class.respond_to?(:locale)
-          I18n.locale
+          @hmt_locale = respond_to?(:locale) ? self.locale.to_s : self.class.respond_to?(:locale) ? self.class.locale.to_s : I18n.locale.to_s
+          
         end
        
         # Returns whether a new translation should be created upon updating the parent record.
@@ -100,7 +100,7 @@ module HasManyTranslations
               self.locales.each do |loc|
                   # put this in a option check blog to determine if the job should be queued? 
                   queue_translation(loc)
-                  #ActiveQueue::Queue.enqueue(TranlationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
+                  #ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
                   #update_all_attributes_translation(loc, self.hmt_locale)
               end
            #end
@@ -129,8 +129,8 @@ module HasManyTranslations
           end
         end
         def update_translation!(attribute, loc, origin_locale)
-           translated_value = Translate.t(try(attribute), origin_locale.to_s, loc.to_s)
-           translations.create(:attribute => attribute, :locale_code => loc.to_s, :value => translated_value, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale)
+           translated_value = try(attribute).nil? ? nil : Translate.t(try(attribute), origin_locale.to_s, loc.to_s)
+           translations.create(:attribute => attribute, :locale_code => loc.to_s, :value => translated_value, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translated_value.nil? 
         end
         
         
@@ -149,15 +149,16 @@ module HasManyTranslations
           end - %w(created_at created_on updated_at updated_on)
         end
         def queue_translation(loc)
-         # Resque.enqueue(TranlationJobs::MachineTranslationJob.new(self.id, self.type))
-          ActiveQueue::Queue.enqueue(TranlationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
-          
-          #job = TranlationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
+         # Resque.enqueue(TranslationJobs::MachineTranslationJob.new(self.id, self.type))
+          #ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
+          Delayed::Job.enqueue(TranslationJobs::AutoTranslateJob.new({:translated_id => self.id,:translated_type  => self.class.to_s, :origin_locale => self.hmt_locale.to_s, :destination_locale => loc.to_s}))
+          #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def queue_translations
-         # Resque.enqueue(TranlationJobs::MachineTranslationJob.new(self.id, self.type))
-          ActiveQueue::Queue.enqueue(TranlationJobs::MachineTranslationJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale})
-          #job = TranlationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
+         # Resque.enqueue(TranslationJobs::MachineTranslationJob.new(self.id, self.type))
+          #ActiveQueue::Queue.enqueue(TranslationJobs::MachineTranslationJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale})
+          Delayed::Job.enqueue(TranslationJobs::MachineTranslationJob.new({ :translated_id => self.id,:translated_type  => self.class.to_s, :origin_locale => self.hmt_locale.to_s }))
+          #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
           locales = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
