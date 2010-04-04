@@ -39,7 +39,7 @@ module HasManyTranslations
             }
           
           alias_method "#{name}_before_type_cast", name
-          #end
+          end
         }
         
         result = prepare_translated_options_without_creation(options)
@@ -48,7 +48,6 @@ module HasManyTranslations
         self.has_many_translations_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
         self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         result
-      end
       
     end
 
