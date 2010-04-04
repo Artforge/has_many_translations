@@ -39,7 +39,7 @@ module HasManyTranslations
             }
           
           alias_method "#{name}_before_type_cast", name
-          end
+          
         }
         
         result = prepare_translated_options_without_creation(options)
@@ -48,6 +48,7 @@ module HasManyTranslations
         self.has_many_translations_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
         self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         result
+      end
       
     end
 
@@ -120,19 +121,20 @@ module HasManyTranslations
         end
 
         def update_all_attributes_translation(loc, origin_locale)
-          translated_columns.each do |attrib|
+          self.translated_columns.each do |attrib|
             update_translation(attrib, loc, origin_locale)
           end
         end
         # Updates the last translation's changes by appending the current translation changes.
-        def update_translation(attribute, loc, origin_locale)
-          unless translations.first(:conditions => {:attribute => attribute, :locale_code => loc.to_s})
-            update_translation!(attribute, loc, origin_locale)
+        def update_translation(attrib, loc, origin_locale)
+          unless translations.first(:conditions => {:attribute => attrib, :locale_code => loc.to_s})
+            update_translation!(attrib, loc, origin_locale.to_s)
           end
         end
-        def update_translation!(attribute, loc, origin_locale)
-           translated_value = try(attribute).nil? ? nil : Translate.t(try(attribute), origin_locale.to_s, loc.to_s)
-           translations.create(:attribute => attribute, :locale_code => loc.to_s, :value => translated_value, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translated_value.nil? 
+        
+        def update_translation!(attrib, loc, origin_locale)
+           translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => Translate.t(try(attrib), origin_locale.to_s, loc.to_s), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) 
+
         end
         
         
@@ -151,15 +153,15 @@ module HasManyTranslations
           end - %w(created_at created_on updated_at updated_on)
         end
         def queue_translation(loc)
-         # Resque.enqueue(TranslationJobs::MachineTranslationJob.new(self.id, self.type))
-          #ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale, :destination_locale => loc.to_s})
-          Delayed::Job.enqueue(TranslationJobs::AutoTranslateJob.new({:translated_id => self.id,:translated_type  => self.class.to_s, :origin_locale => self.hmt_locale.to_s, :destination_locale => loc.to_s}))
-          #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
+          ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id, :translated_type  => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc})
         end
         def queue_translations
+          self.locales.each do |loc|
+            queue_translation(loc)
+          end
          # Resque.enqueue(TranslationJobs::MachineTranslationJob.new(self.id, self.type))
           #ActiveQueue::Queue.enqueue(TranslationJobs::MachineTranslationJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale})
-          Delayed::Job.enqueue(TranslationJobs::MachineTranslationJob.new({ :translated_id => self.id,:translated_type  => self.class.to_s, :origin_locale => self.hmt_locale.to_s }))
+          #Delayed::Job.enqueue(TranslationJobs::MachineTranslationJob.new({ :translated_id => self.id,:translated_type  => self.class.to_s, :origin_locale => self.hmt_locale.to_s })
           #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
