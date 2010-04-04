@@ -23,7 +23,7 @@ module HasManyTranslations
       def prepare_translated_options_with_creation(options)
         self.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact.each{|name|
           #alias_method "#{name}_before_translation", name.to_sym
-          unless try(name)
+          #unless try(name)
             define_method name, lambda { |*args|
               #
               unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale || read_attribute(name.to_sym).nil?
@@ -39,7 +39,7 @@ module HasManyTranslations
             }
           
           alias_method "#{name}_before_type_cast", name
-          end
+          #end
         }
         
         result = prepare_translated_options_without_creation(options)
