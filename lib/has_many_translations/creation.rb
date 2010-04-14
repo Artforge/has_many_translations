@@ -7,7 +7,7 @@ module HasManyTranslations
         extend ClassMethods
         include InstanceMethods
         before_update :update_translation?
- 
+        
         after_save :update_translations!
         class << self
           alias_method_chain :prepare_translated_options, :creation
@@ -49,7 +49,9 @@ module HasManyTranslations
         self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         result
       end
-      
+      def locales=(locales)
+        self.locales = locales
+      end
     end
 
     # Instance methods that determine whether to save a translation and actually perform the save.
@@ -58,6 +60,10 @@ module HasManyTranslations
       
         def localize=(loc)
           @locale = loc
+        end
+        
+        def locales=(locales)
+          @locales = locales
         end
         # def hmt_default_locale
         #         return default_locale.to_sym if respond_to?(:default_locale)
@@ -84,7 +90,7 @@ module HasManyTranslations
           # glob I18n.available_locales with whatever we use for the "study" available_locales
           # I18n.available_locales.include? 
           locales = Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
-          locales.include?(locale)
+          locales.include?(locales)
         end
 
         # Creates a new translation upon updating the parent record.
@@ -166,6 +172,9 @@ module HasManyTranslations
         end
         def locales
           locales = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
+          if @locales && @locales.blank? 
+            @locales
+          end
           # I18n.available_locales.map(&:to_s)
         end
         # Specifies the attributes used during translation creation. This is separated into its own
