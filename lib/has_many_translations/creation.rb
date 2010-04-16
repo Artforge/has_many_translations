@@ -49,9 +49,7 @@ module HasManyTranslations
         self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         result
       end
-      def locales=(locales)
-        self.locales = locales
-      end
+      
     end
 
     # Instance methods that determine whether to save a translation and actually perform the save.
@@ -61,10 +59,11 @@ module HasManyTranslations
         def localize=(loc)
           @locale = loc
         end
-        
         def locales=(locales)
           @locales = locales
+          #update_attribute()
         end
+        
         # def hmt_default_locale
         #         return default_locale.to_sym if respond_to?(:default_locale)
         #         return self.class.default_locale.to_sym if self.class.respond_to?(:default_locale)
@@ -171,11 +170,23 @@ module HasManyTranslations
           #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
-          locales = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
-          if @locales && @locales.blank? 
-            @locales
+          global_loc = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
+          if global_loc && super_locales.blank? && @locales.blank? 
+            global_loc
+          elsif !super_locales.blank?
+            suploc = []
+            super_locales.each do |sloc|
+              suploc.concat(eval("#{sloc}.locales")).uniq
+            end
+            suploc
+          else
+              @locales
           end
           # I18n.available_locales.map(&:to_s)
+        end
+        
+        def super_locales
+          self.class.reflect_on_all_associations(:belongs_to).map{|a|eval("#{a.name.to_s.capitalize}.translated?") ? a.name.to_s : nil}.compact
         end
         # Specifies the attributes used during translation creation. This is separated into its own
         # method so that it can be overridden by the HasManyTranslations::Users feature.
