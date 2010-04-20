@@ -3,3 +3,14 @@
 Makes models speak in tongues!
 
 <tt>has_many_translations</tt>[http://github.com/Artforge/has_many_translations] 
+
+Installing from source
+
+1) cd /[YOUR SOURCE DIRECTORY]/has_many_translations/
+
+2) git pull
+
+3) rake build
+
+4) sudo gem install pkg/has_many_translations-0.2.x.gem (where x is latest version)
+
