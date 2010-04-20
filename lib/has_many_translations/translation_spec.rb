@@ -1,10 +1,4 @@
-module HasManyTranslations
-    # The ActiveRecord model representing translations.
-  class TranslationSpec < ActiveRecord::Base
-    # Associate polymorphically with the parent record.
-    belongs_to :translated, :polymorphic => true
-    # def initial?
-    #       number == 1
-    #     end
-  end
+class TranslationSpec < ActiveRecord::Base
+  belongs_to :translated, :polymorphic => true
+
 end
