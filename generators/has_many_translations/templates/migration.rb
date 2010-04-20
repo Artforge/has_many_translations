@@ -1,11 +1,12 @@
 class CreateTranslations < ActiveRecord::Migration
   def self.up    # 
-    # create_table :locales do |t|
-    #   t.string   :code
-    #   t.string   :name
-    #   t.string   :google_code
-    # end
-    # add_index :locales, :code
+    create_table :translation_specs do |t|
+      t.belongs_to :translated, :polymorphic => true
+      t.string   :codes
+    end
+    add_index :translation_specs, :codes
+    add_index :translation_specs, [:translated_id, :translated_type]
+    
     create_table :translations do |t|
       t.belongs_to :translated, :polymorphic => true
       t.string   :attribute
@@ -25,7 +26,7 @@ class CreateTranslations < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :locales
+    drop_table :translation_spec
     drop_table :translations
     remove_column :users, :prefered_language
   end

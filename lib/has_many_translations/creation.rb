@@ -46,7 +46,7 @@ module HasManyTranslations
 
         self.has_many_translations_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
         self.has_many_translations_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
-        self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
+        #self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         result
       end
       
@@ -170,18 +170,17 @@ module HasManyTranslations
           #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
-          global_loc = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
-          if global_loc && super_locales.blank? && @locales.blank? 
-            global_loc
-          elsif !super_locales.blank?
-            suploc = []
+          retloc = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
+          
+          if !super_locales.blank?
             super_locales.each do |sloc|
-              suploc.concat(eval("#{sloc}.locales")).uniq
+              retloc | eval("self.#{sloc}.locales")
             end
-            suploc
-          else
-              @locales
+            
+          elsif @locales
+            retloc & @locales
           end
+          return retloc
           # I18n.available_locales.map(&:to_s)
         end
         

@@ -22,9 +22,10 @@ module HasManyTranslations
       include TranslationJobs
       include Creation
       include Translations
+      include TranslationSpecs
       prepare_translated_options(options)
       has_many :translations, options, &block
-      has_one :translation_spec
+      has_many :translation_spec
     end
     
   end
