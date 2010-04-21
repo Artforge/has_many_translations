@@ -161,8 +161,8 @@ module HasManyTranslations
         def translated_columns
           case
             textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
-            when has_many_translations_options[:only] then textual_columns & has_many_translations_options[:only]
-            when has_many_translations_options[:except] then textual_columns - has_many_translations_options[:except]
+            when self.has_many_translations_options[:only] then textual_columns & self.has_many_translations_options[:only]
+            when self.has_many_translations_options[:except] then textual_columns - self.has_many_translations_options[:except]
             else textual_columns
           end - %w(created_at created_on updated_at updated_on)
         end
