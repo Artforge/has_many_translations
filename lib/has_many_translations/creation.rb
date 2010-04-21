@@ -56,19 +56,22 @@ module HasManyTranslations
     module InstanceMethods
       #private
         
-        def translation_spec
-          TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
+        def allowed_locales
+          t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
+          t.blank? ? nil : t.codes.split(',').map{|c| c.to_sym}
         end
-        def translation_spec=(ts)
-          
+        def allowed_locales=(codes)
+          t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
+          unless t.blank?
+            t.update_attribute('codes', codes.map{|c|c.to_s}.join(','))
+          else
+            TranslationSpec.create(:translated_id => self.id, :translated_type => self.class.to_s, :codes => codes.map{|c|c.to_s}.join(','))
+          end
         end
         def localize=(loc)
           @locale = loc
         end
-        def locales=(locales)
-          @locales = locales
-          #update_attribute()
-        end
+        
         
         # def hmt_default_locale
         #         return default_locale.to_sym if respond_to?(:default_locale)
@@ -176,15 +179,18 @@ module HasManyTranslations
           #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
         def locales
-          retloc = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
           
-          if !super_locales.blank?
+          if allowed_locales
+            retloc = allowed_locales.map{|l|l.to_s}
+          elsif !super_locales.blank?
             super_locales.each do |sloc|
-              retloc | eval("self.#{sloc}.locales")
+              retloc.nil? ? retloc = eval("self.#{sloc}.locales") : retloc | eval("self.#{sloc}.locales")
             end
             
-          elsif @locales
-            retloc & @locales
+          
+            
+          else
+            retloc = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
           end
           return retloc
           # I18n.available_locales.map(&:to_s)

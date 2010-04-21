@@ -23,7 +23,6 @@ module HasManyTranslations
       include Creation
       include Translations
       prepare_translated_options(options)
-      has_one :translation_spec
       has_many :translations, options, &block
       
     end
