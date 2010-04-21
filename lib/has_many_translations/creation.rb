@@ -55,7 +55,13 @@ module HasManyTranslations
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
       #private
-      
+        
+        def translation_spec
+          TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
+        end
+        def translation_spec=(ts)
+          
+        end
         def localize=(loc)
           @locale = loc
         end
