@@ -159,12 +159,11 @@ module HasManyTranslations
         # default is to translation all text & string columns. At any rate, the four "automagic" timestamp 
         # columns maintained by Rails are never translationed.
         def translated_columns
-          case
-            textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
-            when self.has_many_translations_options[:only] then textual_columns & self.has_many_translations_options[:only]
-            when self.has_many_translations_options[:except] then textual_columns - self.has_many_translations_options[:except]
-            else textual_columns
-          end - %w(created_at created_on updated_at updated_on)
+          textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
+          textual_columns = self.has_many_translations_options[:only] ? textual_columns & self.has_many_translations_options[:only] : textual_columns
+          textual_columns = self.has_many_translations_options[:except] ? textual_columns - self.has_many_translations_options[:except] : textual_columns
+          return textual_columns
+          
         end
         def queue_translation(loc)
           ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id, :translated_type  => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc})
