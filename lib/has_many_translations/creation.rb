@@ -60,7 +60,7 @@ module HasManyTranslations
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
           t.blank? ? nil : t.codes.split(',').map{|c| c.to_sym}
         end
-        def allowed_locales=(codes)
+        def locales=(codes)
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
           unless t.blank?
             t.update_attribute('codes', codes.map{|c|c.to_s}.join(','))
