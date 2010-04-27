@@ -28,7 +28,7 @@ module HasManyTranslations
               #
               unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale || read_attribute(name.to_sym).nil?
                 trans = self.translations.first(:conditions => {:locale_code => self.hmt_locale, :attribute => name})
-                val = trans.nil? ? nil : trans.value
+                val = trans.nil? ? read_attribute(name.to_sym) : trans.value
                 #self.hmt_locale
               else
                 #self.id
@@ -181,7 +181,7 @@ module HasManyTranslations
           
           if allowed_locales
             retloc = allowed_locales.map{|l|l.to_s}
-          elsif !super_locales.blank?
+          elsif super_locales.present? 
             super_locales.each do |sloc|
               retloc.nil? ? retloc = eval("self.#{sloc}.locales") : retloc | eval("self.#{sloc}.locales")
             end
@@ -189,14 +189,16 @@ module HasManyTranslations
           
             
           else
-            retloc = has_many_translations_options[:locales] ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
+            retloc = has_many_translations_options[:locales] && I18n && Google ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
           end
           return retloc
           # I18n.available_locales.map(&:to_s)
         end
         
-        def super_locales
-          self.class.reflect_on_all_associations(:belongs_to).map{|a|eval("#{a.name.to_s.capitalize}.translated?") ? a.name.to_s : nil}.compact
+        def super_locales 
+          if I18n && Google
+            self.class.reflect_on_all_associations(:belongs_to).map{|a|eval("#{a.name.to_s.capitalize}.translated?") ? a.name.to_s : nil}.compact
+          end
         end
         # Specifies the attributes used during translation creation. This is separated into its own
         # method so that it can be overridden by the HasManyTranslations::Users feature.
