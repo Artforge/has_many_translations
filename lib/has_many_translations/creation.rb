@@ -55,6 +55,7 @@ module HasManyTranslations
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
       #private
+        @translator = Translate::RTranslate.new(:key => "ABQIAAAAqOz46Hd7uGybKsZC5Rve-xTzjcyPRAIsCAbL6xU5j9ci3VJCthQ8uZZbMZLVhYttFIXO6NzhD20cVg")
         
         def allowed_locales
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
@@ -146,8 +147,9 @@ module HasManyTranslations
           end
         end
         
-        def update_translation!(attrib, loc, origin_locale)
-           translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => Translate.t(try(attrib), origin_locale.to_s, loc.to_s), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) 
+        def update_translation!(attrib, loc, origin_locale, options = {})
+          
+           translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(try(attrib), origin_locale.to_s, loc.to_s), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) 
 
         end
         
@@ -167,6 +169,9 @@ module HasManyTranslations
         end
         def queue_translation(loc)
           ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id, :translated_type  => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc})
+        end
+        def queue_batch_translation(loc)
+          
         end
         def queue_translations
           self.locales.each do |loc|
