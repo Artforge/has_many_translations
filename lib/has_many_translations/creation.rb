@@ -55,6 +55,7 @@ module HasManyTranslations
 
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
+      attr_accessor :translator
       #private
         @translator = Translate::RTranslate.new
         if defined? Settings
