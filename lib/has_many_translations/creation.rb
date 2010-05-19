@@ -18,7 +18,7 @@ module HasManyTranslations
     
     # Class methods added to ActiveRecord::Base to facilitate the creation of new translations.
     module ClassMethods
-      
+      attr_accessor :translator
       # Overrides the basal +prepare_has_translations_options+ method defined in HasManyTranslations::Options
       # to extract the <tt>:only</tt> and <tt>:except</tt> options into +has_many_translations_options+.
       def prepare_translated_options_with_creation(options)
@@ -55,7 +55,7 @@ module HasManyTranslations
 
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
-      attr_accessor :translator
+      
       #private
         self.translator = Translate::RTranslate.new
         if defined? Settings
