@@ -16,7 +16,7 @@ begin
     g.add_dependency 'activerecord', '>= 2.1.0'
     g.add_development_dependency 'shoulda'
     g.add_development_dependency 'mocha'
-    g.add_runtime_dependency 'sishen-rtranslate'
+    g.add_runtime_dependency 'opengotham-rtranslate'
     g.add_runtime_dependency 'activequeue'
   end
   Jeweler::GemcutterTasks.new
