@@ -149,9 +149,10 @@ module HasManyTranslations
         end
         
         def update_translation!(attrib, loc, origin_locale, options = {})
-          
-           translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(try(attrib), origin_locale.to_s, loc.to_s), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) 
-
+           translation_val = @translator.translate(try(attrib), origin_locale.to_s, loc.to_s).
+           unless translation_val.match(/^Error:/)
+             translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(try(attrib), origin_locale.to_s, loc.to_s), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) 
+           end
         end
         
         
@@ -169,7 +170,7 @@ module HasManyTranslations
           
         end
         def queue_translation(loc)
-          ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{:translated_id => self.id, :translated_type  => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc})
+          ActiveQueue::Job.new(:value => TranslationJobs::AutoTranslateJob.new(:translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc), :adapter => "resque", :queue_name => :file_queue).enqueue
         end
         def queue_batch_translation(loc)
           
@@ -191,9 +192,6 @@ module HasManyTranslations
             super_locales.each do |sloc|
               retloc.nil? ? retloc = eval("self.#{sloc}.locales") : retloc | eval("self.#{sloc}.locales")
             end
-            
-          
-            
           else
             retloc = has_many_translations_options[:locales] && I18n && Google ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
           end
