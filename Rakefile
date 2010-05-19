@@ -18,6 +18,7 @@ begin
     g.add_development_dependency 'mocha'
     g.add_runtime_dependency 'opengotham-rtranslate'
     g.add_runtime_dependency 'activequeue'
+    g.add_runtime_dependency 'settingslogic'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

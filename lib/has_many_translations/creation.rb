@@ -56,8 +56,10 @@ module HasManyTranslations
     # Instance methods that determine whether to save a translation and actually perform the save.
     module InstanceMethods
       #private
-        @translator = Translate::RTranslate.new(:key => "ABQIAAAAqOz46Hd7uGybKsZC5Rve-xTzjcyPRAIsCAbL6xU5j9ci3VJCthQ8uZZbMZLVhYttFIXO6NzhD20cVg")
-        
+        @translator = Translate::RTranslate.new
+        if defined? Settings
+          @translator.key = Settings.google_api_key
+        end
         def allowed_locales
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
           t.blank? ? nil : t.codes.split(',').map{|c| c.to_sym}
