@@ -150,9 +150,8 @@ module HasManyTranslations
         
         def update_translation!(attrib, loc, origin_locale, options = {})
            translation_val = @translator.translate(try(attrib), origin_locale.to_s, loc.to_s).
-           unless translation_val.match(/^Error:/)
-             translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(try(attrib), origin_locale.to_s, loc.to_s), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) 
-           end
+           translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(translation_val), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.match('Error: ')
+           
         end
         
         
@@ -171,9 +170,6 @@ module HasManyTranslations
         end
         def queue_translation(loc)
           ActiveQueue::Job.new(:value => TranslationJobs::AutoTranslateJob.new(:translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc), :adapter => "resque", :queue_name => :file_queue).enqueue
-        end
-        def queue_batch_translation(loc)
-          
         end
         def queue_translations
           self.locales.each do |loc|
