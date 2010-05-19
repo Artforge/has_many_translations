@@ -57,9 +57,9 @@ module HasManyTranslations
     module InstanceMethods
       attr_accessor :translator
       #private
-        @translator = Translate::RTranslate.new
+        self.translator = Translate::RTranslate.new
         if defined? Settings
-          @translator.key = Settings.google_api_key
+          self.translator.key = Settings.google_api_key
         end
         def allowed_locales
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
