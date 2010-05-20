@@ -33,8 +33,10 @@ module HasManyTranslations
         class_inheritable_accessor :has_many_translations_options
         class_inheritable_accessor :translator
         self.translator = Translate::RTranslate.new
-        if defined? Settings
-          self.translator.key = Settings.google_api_key
+        if defined? HmtSettings
+          self.translator.key = HmtSettings.google_api_key
+        else
+          self.translator.key = "MATTHEWJORDING-KUI7G1Nq6SrehSNmYdNUEggt22IT7rkXMJ88hrexhRKIVFM4oqPdej0olNf01ODExiLBg"
         end
         self.has_many_translations_options = options.dup
 
