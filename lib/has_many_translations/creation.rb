@@ -153,7 +153,11 @@ module HasManyTranslations
         end
         
         def update_translation!(attrib, loc, origin_locale, options = {})
-           translation_val = self.translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
+           @translator ||= Translate::RTranslate.new
+           if defined? HmtSettings
+             @translator.key = HmtSettings.google_api_key
+           end
+           translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
            translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(translation_val), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
         end
         
