@@ -15,6 +15,7 @@ module HasManyTranslations
       translated_without_flag(*args)  
 
       class << self
+        
         def translated?
           true
         end

@@ -18,10 +18,7 @@ module HasManyTranslations
     
     # Class methods added to ActiveRecord::Base to facilitate the creation of new translations.
     module ClassMethods
-      @translator = Translate::RTranslate.new
-      def self.translator
-        @translator
-      end
+      #@translator = Translate::RTranslate.new
       # Overrides the basal +prepare_has_translations_options+ method defined in HasManyTranslations::Options
       # to extract the <tt>:only</tt> and <tt>:except</tt> options into +has_many_translations_options+.
       def prepare_translated_options_with_creation(options)
@@ -60,9 +57,10 @@ module HasManyTranslations
     module InstanceMethods
       
       #private
-        
+        #attr_accessor :translator
+        #@translator = Translate::RTranslate.new
         if defined? Settings
-          @translator.key = Settings.google_api_key
+          self.translator.key = Settings.google_api_key
         end
         def allowed_locales
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
@@ -157,7 +155,6 @@ module HasManyTranslations
         def update_translation!(attrib, loc, origin_locale, options = {})
            translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
            translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => @translator.translate(translation_val), :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
-           
         end
         
         

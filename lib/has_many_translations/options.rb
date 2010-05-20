@@ -31,6 +31,11 @@ module HasManyTranslations
           :dependent => :delete_all
         )
         class_inheritable_accessor :has_many_translations_options
+        class_inheritable_accessor :translator
+        self.translator = Translate::RTranslate.new
+        if defined? Settings
+          self.translator.key = Settings.google_api_key
+        end
         self.has_many_translations_options = options.dup
 
         options.merge!(
