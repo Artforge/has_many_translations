@@ -1,9 +1,10 @@
 module HasManyTranslations
+  
   module Control
+    
     def self.included(base) # :nodoc:
       base.class_eval do
         include InstanceMethods
-
         alias_method_chain :create_translation?, :control
         alias_method_chain :update_translation?, :control
       end
@@ -23,10 +24,10 @@ module HasManyTranslations
           save!
         end
       end
+      
       def skip_translation?
         !!@skip_translation
       end
-      
       
       private
         # Used for each control block, the +with_version_flag+ method sets a given variable to
@@ -42,6 +43,7 @@ module HasManyTranslations
             instance_variable_set("@#{flag}", nil)
           end
         end
+        
     end
   end
 end

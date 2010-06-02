@@ -2,6 +2,7 @@ Dir[File.join(File.dirname(__FILE__), 'has_many_translations', '*.rb')].each{|f|
 
 require 'rtranslate'
 require 'activequeue'
+
 # The base module that gets included in ActiveRecord::Base. See the documentation for
 # HasManyTranslations::ClassMethods for more useful information.
 module HasManyTranslations
@@ -13,8 +14,8 @@ module HasManyTranslations
       extend Translated
     end
   end
+  
   module ClassMethods
-    
     def translated(options = {}, &block)
       return if translated?
       
@@ -28,7 +29,9 @@ module HasManyTranslations
     end
     
   end
+  
   extend Configuration
+  
 end
 
 ActiveRecord::Base.send(:include, HasManyTranslations)

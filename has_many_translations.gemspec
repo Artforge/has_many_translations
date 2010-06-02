@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_many_translations}
-  s.version = "0.3.1"
+  s.version = "0.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["opengotham"]
-  s.date = %q{2010-05-19}
+  s.date = %q{2010-05-20}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
   s.email = %q{mjording@openogotham.com}
   s.extra_rdoc_files = [
@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/has_many_translations/configuration.rb",
      "lib/has_many_translations/control.rb",
      "lib/has_many_translations/creation.rb",
+     "lib/has_many_translations/hmt_settings.rb",
      "lib/has_many_translations/options.rb",
      "lib/has_many_translations/translated.rb",
      "lib/has_many_translations/translation.rb",
@@ -51,21 +52,24 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activerecord>, [">= 2.1.0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
-      s.add_runtime_dependency(%q<sishen-rtranslate>, [">= 0"])
+      s.add_runtime_dependency(%q<opengotham-rtranslate>, [">= 0"])
       s.add_runtime_dependency(%q<activequeue>, [">= 0"])
+      s.add_runtime_dependency(%q<settingslogic>, [">= 0"])
     else
       s.add_dependency(%q<activerecord>, [">= 2.1.0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0"])
-      s.add_dependency(%q<sishen-rtranslate>, [">= 0"])
+      s.add_dependency(%q<opengotham-rtranslate>, [">= 0"])
       s.add_dependency(%q<activequeue>, [">= 0"])
+      s.add_dependency(%q<settingslogic>, [">= 0"])
     end
   else
     s.add_dependency(%q<activerecord>, [">= 2.1.0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])
-    s.add_dependency(%q<sishen-rtranslate>, [">= 0"])
+    s.add_dependency(%q<opengotham-rtranslate>, [">= 0"])
     s.add_dependency(%q<activequeue>, [">= 0"])
+    s.add_dependency(%q<settingslogic>, [">= 0"])
   end
 end
 
