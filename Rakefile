@@ -10,13 +10,13 @@ begin
     g.name = 'has_many_translations'
     g.summary = %(Makes models' speak in tongues)
     g.description = %(Keep a DRY multilingual translation of your ActiveRecord models' textual attributes)
-    g.email = 'mjording@openogotham.com'
+    g.email = 'adam@artforge.com'
     g.homepage = 'http://github.com/opengotham/has_many_translations'
-    g.authors = %w(opengotham)
+    g.authors = ["opengotham","Artforge"]
     g.add_dependency 'activerecord', '>= 2.1.0'
     g.add_development_dependency 'shoulda'
     g.add_development_dependency 'mocha'
-    g.add_runtime_dependency 'opengotham-rtranslate'
+    g.add_runtime_dependency 'artforge-rtranslate', '>=1.3.2'
     g.add_runtime_dependency 'activequeue'
     g.add_runtime_dependency 'settingslogic'
   end

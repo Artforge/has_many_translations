@@ -12,5 +12,5 @@ Installing from source
 
 3) rake build
 
-4) sudo gem install pkg/has_many_translations-0.2.x.gem (where x is latest version)
+4) sudo gem install pkg/has_many_translations-0.3.x.gem (where x is latest version)
 

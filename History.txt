@@ -1,0 +1,3 @@
+V0.3.4 Jul 2nd, 2010
+* Enable optional use of post request method, this solves the problem that some foreign character set create too large a string for a get request.
+* change rtranslate dependency to artforge-rtranslate to support above

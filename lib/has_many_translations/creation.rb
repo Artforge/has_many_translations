@@ -157,7 +157,9 @@ module HasManyTranslations
            if defined? HmtSettings
              @translator.key = HmtSettings.google_api_key
            end
-           translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
+           # translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
+           translation_val = @translator.post_translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
+           # translation_val = @translator.translate(try(attrib), origin_locale.to_s, loc.to_s, {:method => :post})
            translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => translation_val, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
         end
         
