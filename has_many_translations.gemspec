@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_many_translations}
-  s.version = "0.3.4"
+  s.version = "0.3.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["opengotham", "Artforge"]
-  s.date = %q{2010-07-02}
+  s.date = %q{2010-08-02}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
   s.email = %q{adam@artforge.com}
   s.extra_rdoc_files = [
@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".gitignore",
+     "History.txt",
      "README.rdoc",
      "Rakefile",
      "VERSION",
@@ -52,14 +53,14 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activerecord>, [">= 2.1.0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
-      s.add_runtime_dependency(%q<artforge-rtranslate>, [">= 1.3.2"])
+      s.add_runtime_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
       s.add_runtime_dependency(%q<activequeue>, [">= 0"])
       s.add_runtime_dependency(%q<settingslogic>, [">= 0"])
     else
       s.add_dependency(%q<activerecord>, [">= 2.1.0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0"])
-      s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.2"])
+      s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
       s.add_dependency(%q<activequeue>, [">= 0"])
       s.add_dependency(%q<settingslogic>, [">= 0"])
     end
@@ -67,7 +68,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activerecord>, [">= 2.1.0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])
-    s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.2"])
+    s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
     s.add_dependency(%q<activequeue>, [">= 0"])
     s.add_dependency(%q<settingslogic>, [">= 0"])
   end

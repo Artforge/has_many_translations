@@ -16,7 +16,7 @@ begin
     g.add_dependency 'activerecord', '>= 2.1.0'
     g.add_development_dependency 'shoulda'
     g.add_development_dependency 'mocha'
-    g.add_runtime_dependency 'artforge-rtranslate', '>=1.3.2'
+    g.add_runtime_dependency 'artforge-rtranslate', '>=1.3.4'
     g.add_runtime_dependency 'activequeue'
     g.add_runtime_dependency 'settingslogic'
   end
