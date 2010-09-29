@@ -1,4 +1,6 @@
 require 'rtranslate'
+require 'translation_spec'
+
 module HasManyTranslations
   # Adds the functionality necessary for translation actions on a has_translations instance of
   # ActiveRecord::Base.
