@@ -1,4 +1,5 @@
 require 'rtranslate'
+require 'translation_spec'
 module HasManyTranslations
   # Adds the functionality necessary for translation actions on a has_translations instance of
   # ActiveRecord::Base.
@@ -28,7 +29,7 @@ module HasManyTranslations
             define_method name, lambda { |*args|
               #
               unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale || read_attribute(name.to_sym).nil?
-                trans = self.translations.first(:conditions => {:locale_code => self.hmt_locale, :attribute => name})
+                trans = self.translations.first(:conditions => {:locale_code => self.hmt_locale, :model_attribute => name})
                 val = trans.nil? ? read_attribute(name.to_sym) : trans.value
                 #self.hmt_locale
               else
@@ -133,7 +134,7 @@ module HasManyTranslations
           unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale
             dirty_translations = self.translations.all(:conditions => {:translated_id => self.id, :locale_code => self.hmt_locale})
             dirty_translations.each do |dt|
-              dt.value = try(dt.attribute)
+              dt.value = try(dt.model_attribute)
               dt.save
             end
             return false
@@ -147,7 +148,7 @@ module HasManyTranslations
         end
         # Updates the last translation's changes by appending the current translation changes.
         def update_translation(attrib, loc, origin_locale)
-          unless translations.first(:conditions => {:attribute => attrib, :locale_code => loc.to_s})
+          unless translations.first(:conditions => {:model_attribute => attrib, :locale_code => loc.to_s})
             update_translation!(attrib, loc, origin_locale.to_s)
           end
         end
@@ -158,7 +159,7 @@ module HasManyTranslations
              @translator.key = HmtSettings.google_api_key
            end
            translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
-           translations.create(:attribute => attrib, :locale_code => loc.to_s, :value => translation_val, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
+           translations.create(:model_attribute => attrib, :locale_code => loc.to_s, :value => translation_val, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
         end
         
         

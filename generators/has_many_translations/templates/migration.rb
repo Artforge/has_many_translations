@@ -9,7 +9,7 @@ class CreateTranslations < ActiveRecord::Migration
     
     create_table :translations do |t|
       t.belongs_to :translated, :polymorphic => true
-      t.string   :attribute
+      t.string   :model_attribute
       t.text     :value
       t.string   :locale_code
       t.string   :locale_name
@@ -17,7 +17,7 @@ class CreateTranslations < ActiveRecord::Migration
       t.boolean  :machine_translation
       t.timestamps
     end
-    add_index :translations, [:locale_code, :attribute]
+    add_index :translations, [:locale_code, :model_attribute]
     add_index :translations, [:translated_id, :translated_type]
     
     change_table :users do |t|
