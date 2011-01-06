@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rake'
 require 'rake/testtask'
-require 'rcov/rcovtask'
+# require 'rcov/rcovtask'
 require 'rake/rdoctask'
 
 begin
@@ -13,7 +13,7 @@ begin
     g.email = 'mjording@openogotham.com'
     g.homepage = 'http://github.com/opengotham/has_many_translations'
     g.authors = %w(opengotham)
-    g.add_dependency 'activerecord', '>= 2.1.0'
+    # g.add_dependency 'activerecord', '>= 2.1.0'
     g.add_development_dependency 'shoulda'
     g.add_development_dependency 'mocha'
     g.add_runtime_dependency 'opengotham-rtranslate'
@@ -30,10 +30,10 @@ Rake::TestTask.new do |t|
   t.pattern = 'test/**/*_test.rb'
 end
 
-Rcov::RcovTask.new do |t|
-  t.libs = %w(test)
-  t.pattern = 'test/**/*_test.rb'
-end
+# Rcov::RcovTask.new do |t|
+#   t.libs = %w(test)
+#   t.pattern = 'test/**/*_test.rb'
+# end
 
 task :test => :check_dependencies
 task :default => :test
