@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["opengotham", "Artforge"]
+  s.authors = ["OpenGotham", "Artforge"]
   s.date = %q{2011-01-06}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
   s.email = %q{mjording@opengotham.com}
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
     "lib/translation_spec.rb",
     "tasks/has_many_translations_tasks.rake"
   ]
-  s.homepage = %q{http://github.com/opengotham/has_many_translations}
+  s.homepage = %q{http://github.com/OpenGotham/has_many_translations}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Makes models' speak in tongues}
