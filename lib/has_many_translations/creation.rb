@@ -1,5 +1,6 @@
 require 'rtranslate'
 require 'translation_spec'
+
 module HasManyTranslations
   # Adds the functionality necessary for translation actions on a has_translations instance of
   # ActiveRecord::Base.
@@ -63,10 +64,12 @@ module HasManyTranslations
         if defined? Settings
           @translator.key = Settings.google_api_key
         end
+        
         def allowed_locales
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
           t.blank? ? nil : t.codes.split(',').map{|c| c.to_sym}
         end
+        
         def locales=(codes)
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
           unless t.blank?
@@ -75,6 +78,7 @@ module HasManyTranslations
             TranslationSpec.create(:translated_id => self.id, :translated_type => self.class.to_s, :codes => codes.map{|c|c.to_s}.join(','))
           end
         end
+        
         def localize=(loc)
           @locale = loc
         end
@@ -99,6 +103,7 @@ module HasManyTranslations
           #!translation_changes.blank?
           true
         end
+        
         def create_translation_for_locale?(locale)
           #determine if locale parameter is supported by this translated 
           # find out if we have a table created for all locales
@@ -110,7 +115,6 @@ module HasManyTranslations
 
         # Creates a new translation upon updating the parent record.
         def create_translation
-          
           translation.create(translation_attributes)
           #reset_translation_changes
           #reset_translation
@@ -146,6 +150,7 @@ module HasManyTranslations
             update_translation(attrib, loc, origin_locale)
           end
         end
+        
         # Updates the last translation's changes by appending the current translation changes.
         def update_translation(attrib, loc, origin_locale)
           unless translations.first(:conditions => {:model_attribute => attrib, :locale_code => loc.to_s})
@@ -174,24 +179,19 @@ module HasManyTranslations
           textual_columns = self.has_many_translations_options[:only] ? textual_columns & self.has_many_translations_options[:only] : textual_columns
           textual_columns = self.has_many_translations_options[:except] ? textual_columns - self.has_many_translations_options[:except] : textual_columns
           return textual_columns
-          
         end
+        
         def queue_translation(loc)
-          #ActiveQueue::Queue.enqueue(TranslationJobs::AutoTranslateJob,{ :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc })
           ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => "resque").enqueue
-          #ActiveQueue::Job.new(:value => TranslationJobs::AutoTranslateJob.new(:translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc), :adapter => "resque", :queue_name => :file_queue).enqueue
         end
+        
         def queue_translations
           self.locales.each do |loc|
             queue_translation(loc)
           end
-         # Resque.enqueue(TranslationJobs::MachineTranslationJob.new(self.id, self.type))
-          #ActiveQueue::Queue.enqueue(TranslationJobs::MachineTranslationJob,{:translated_id => self.id,:translated_type  => self.type, :origin_locale =>  self.hmt_locale})
-          #Delayed::Job.enqueue(TranslationJobs::MachineTranslationJob.new({ :translated_id => self.id,:translated_type  => self.class.to_s, :origin_locale => self.hmt_locale.to_s })
-          #job = TranslationJobs::MachineTranslationJob.new(self.id, self.type, self.hmt_locale)
         end
+        
         def locales
-          
           if allowed_locales
             retloc = allowed_locales.map{|l|l.to_s}
           elsif super_locales.present? 

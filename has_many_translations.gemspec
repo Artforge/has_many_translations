@@ -5,18 +5,19 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_many_translations}
-  s.version = "0.3.3"
+  s.version = "0.3.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["opengotham"]
-  s.date = %q{2010-06-02}
+  s.authors = ["opengotham", "Artforge"]
+  s.date = %q{2010-09-29}
   s.description = %q{Keep a DRY multilingual translation of your ActiveRecord models' textual attributes}
-  s.email = %q{mjording@openogotham.com}
+  s.email = %q{adam@artforge.com}
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
   s.files = [
     ".gitignore",
+     "History.txt",
      "README.rdoc",
      "Rakefile",
      "VERSION",
@@ -41,25 +42,25 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/opengotham/has_many_translations}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Makes models' speak in tongues}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activerecord>, [">= 2.1.0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
-      s.add_runtime_dependency(%q<opengotham-rtranslate>, [">= 0"])
+      s.add_runtime_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
       s.add_runtime_dependency(%q<activequeue>, [">= 0"])
       s.add_runtime_dependency(%q<settingslogic>, [">= 0"])
     else
       s.add_dependency(%q<activerecord>, [">= 2.1.0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<mocha>, [">= 0"])
-      s.add_dependency(%q<opengotham-rtranslate>, [">= 0"])
+      s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
       s.add_dependency(%q<activequeue>, [">= 0"])
       s.add_dependency(%q<settingslogic>, [">= 0"])
     end
@@ -67,7 +68,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activerecord>, [">= 2.1.0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])
-    s.add_dependency(%q<opengotham-rtranslate>, [">= 0"])
+    s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
     s.add_dependency(%q<activequeue>, [">= 0"])
     s.add_dependency(%q<settingslogic>, [">= 0"])
   end
