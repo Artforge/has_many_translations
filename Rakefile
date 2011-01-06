@@ -11,7 +11,7 @@ begin
     g.summary = %(Makes models' speak in tongues)
     g.description = %(Keep a DRY multilingual translation of your ActiveRecord models' textual attributes)
     g.email = 'mjording@opengotham.com'
-    g.homepage = 'http://github.com/OpenGotham/has_many_translations'
+    g.homepage = 'http://github.com/artforge/has_many_translations'
     g.authors = ["OpenGotham","Artforge"]
     g.add_dependency 'activerecord', '>= 2.1.0'
     g.add_development_dependency 'shoulda'

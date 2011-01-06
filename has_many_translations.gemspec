@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
     "lib/translation_spec.rb",
     "tasks/has_many_translations_tasks.rake"
   ]
-  s.homepage = %q{http://github.com/OpenGotham/has_many_translations}
+  s.homepage = %q{http://github.com/artforge/has_many_translations}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Makes models' speak in tongues}
