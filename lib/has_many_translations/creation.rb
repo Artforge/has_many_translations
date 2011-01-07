@@ -154,7 +154,7 @@ module HasManyTranslations
         
         # Updates the last translation's changes by appending the current translation changes.
         def update_translation(attrib, loc, origin_locale)
-          unless translations.first(:conditions => {:model_attribute => attrib, :locale_code => loc.to_s})
+          if !translations.first(:conditions => {:model_attribute => attrib, :locale_code => loc.to_s}) || self.has_many_translations_options[:force_on_update]
             update_translation!(attrib, loc, origin_locale.to_s)
           end
         end
