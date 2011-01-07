@@ -8,6 +8,7 @@ group :development do
   gem 'cucumber'
   gem 'launchy'
   gem 'pickler'
+  gem 'jeweler'
 end
 
 gem 'artforge-rtranslate', '>=1.3.4'

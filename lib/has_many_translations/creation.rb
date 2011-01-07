@@ -49,7 +49,9 @@ module HasManyTranslations
 
         self.has_many_translations_options[:only] = Array(options.delete(:only)).map(&:to_s).uniq if options[:only]
         self.has_many_translations_options[:except] = Array(options.delete(:except)).map(&:to_s).uniq if options[:except]
-        #self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
+        self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
+        self.has_many_translations_options[:default_languages] = Array(options.delete(:default_languages)).map(&:to_s).uniq if options[:default_languages]
+        
         result
       end
       
@@ -192,8 +194,10 @@ module HasManyTranslations
         end
         
         def locales
-          if allowed_locales
-            retloc = allowed_locales.map{|l|l.to_s}
+          if has_many_translations_options[:default_languages]  
+            retloc = has_many_translations_options[:default_languages]  
+          elsif allowed_locales
+            retloc = has_many_translations_options[:locales] & allowed_locales.map{|l|l.to_s}
           elsif super_locales.present? 
             super_locales.each do |sloc|
               retloc.nil? ? retloc = eval("self.#{sloc}.locales") : retloc | eval("self.#{sloc}.locales")
