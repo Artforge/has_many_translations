@@ -35,6 +35,10 @@ module HasManyTranslations
         self.translator = Translate::RTranslate.new
         if defined? HmtSettings
           self.translator.key = HmtSettings.google_api_key
+          options[:default_languages] = HmtSettings.default_languages ? HmtSettings.default_languages : nil
+          options[:languages] = HmtSettings.languages ? HmtSettings.languages : nil
+          options[:force_on_update] = HmtSettings.force_on_update ? HmtSettings.force_on_update : nil
+          
         end
         self.has_many_translations_options = options.dup
 
