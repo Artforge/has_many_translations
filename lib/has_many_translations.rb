@@ -22,6 +22,7 @@ module HasManyTranslations
       include Options
       include TranslationJobs
       include Creation
+      include Control
       include Translations
       prepare_translated_options(options)
       has_many :translations, options, &block

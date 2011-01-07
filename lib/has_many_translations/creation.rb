@@ -29,14 +29,12 @@ module HasManyTranslations
           #unless try(name)
             define_method name, lambda { |*args|
               #
-              unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale || read_attribute(name.to_sym).nil?
+              if self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale || read_attribute(name.to_sym).nil?
+                read_attribute(name.to_sym)
+              else
                 trans = self.translations.first(:conditions => {:locale_code => self.hmt_locale, :model_attribute => name})
                 val = trans.nil? ? read_attribute(name.to_sym) : trans.value
                 #self.hmt_locale
-              else
-                #self.id
-                read_attribute(name.to_sym)
-                #try(name)
               end
               #HasManyTranslations.fetch(args.first || self.class.locale || I18n.locale, name)
             }
@@ -122,9 +120,7 @@ module HasManyTranslations
           #reset_translation
         end
 
-        # Returns whether the last translation should be updated upon updating the parent record.
-        # This method is overridden in HasManyTranslations::Control to account for a control block that
-        # merges changes onto the previous translation.
+        
         def update_translations!
            #translated_columns.each do |attrib|
               self.locales.each do |loc|
@@ -136,6 +132,9 @@ module HasManyTranslations
            #end
         end
         
+        # Returns whether the last translation should be updated upon updating the parent record.
+        # This method is overridden in HasManyTranslations::Control to account for a control block that
+        # merges changes onto the previous translation.
         def update_translation?
           unless self.translations.blank? || self.translations.first.origin_locale_code == self.hmt_locale
             dirty_translations = self.translations.all(:conditions => {:translated_id => self.id, :locale_code => self.hmt_locale})
