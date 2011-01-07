@@ -50,7 +50,7 @@ module HasManyTranslations
         self.has_many_translations_options[:locales] = Array(options.delete(:locales)).map(&:to_s).uniq if options[:locales]
         self.has_many_translations_options[:default_languages] = options[:default_languages] ? Array(options.delete(:default_languages)).map(&:to_s).uniq : nil
         self.has_many_translations_options[:languages] = options[:languages] ? Array(options.delete(:languages)).map(&:to_s).uniq : nil
-        self.has_many_translations_options[:force_on_update] = options[:force_on_update] ? Array(options.delete(:force_on_update)).map(&:to_s).uniq : nil
+        # self.has_many_translations_options[:force_on_update] = options[:force_on_update] ? Array(options.delete(:force_on_update)).map(&:to_s).uniq : nil
         
         
         result
@@ -157,7 +157,7 @@ module HasManyTranslations
         
         # Updates the last translation's changes by appending the current translation changes.
         def update_translation(attrib, loc, origin_locale)
-          if !translations.first(:conditions => {:model_attribute => attrib, :locale_code => loc.to_s}) || self.has_many_translations_options[:force_on_update]
+          if !translations.first(:conditions => {:model_attribute => attrib, :locale_code => loc.to_s}) || self.force_on_update?
             update_translation!(attrib, loc, origin_locale.to_s)
           end
         end
