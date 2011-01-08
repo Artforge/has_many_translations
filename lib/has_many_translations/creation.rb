@@ -180,8 +180,13 @@ module HasManyTranslations
         # columns maintained by Rails are never translationed.
         def translated_columns
           textual_columns = self.class.columns.map{|c|c.type == :string || c.type == :text ? c.name : nil}.compact
-          textual_columns = self.has_many_translations_options[:only] ? textual_columns & self.has_many_translations_options[:only] : textual_columns
-          textual_columns = self.has_many_translations_options[:except] ? textual_columns - self.has_many_translations_options[:except] : textual_columns
+          
+          if self.has_many_translations_options[:except] 
+            textual_columns = textual_columns - self.has_many_translations_options[:except]
+          elsif self.has_many_translations_options[:only] 
+            textual_columns = textual_columns & self.has_many_translations_options[:only]
+          end
+          
           return textual_columns
         end
         
@@ -196,18 +201,17 @@ module HasManyTranslations
         end
         
         def locales
-          if has_many_translations_options[:default_languages]  
-            retloc = has_many_translations_options[:default_languages]  
-          elsif allowed_locales
-            retloc = has_many_translations_options[:locales] & allowed_locales.map{|l|l.to_s}
+          if allowed_locales
+            retloc = has_many_translations_options[:default_locales] ? (has_many_translations_options[:default_locales] & allowed_locales.map{|l|l.to_s}) : allowed_locales.map{|l|l.to_s}
           elsif super_locales.present? 
             super_locales.each do |sloc|
               retloc.nil? ? retloc = eval("self.#{sloc}.locales") : retloc | eval("self.#{sloc}.locales")
             end
-          else
-            retloc = has_many_translations_options[:locales] && I18n && Google ? has_many_translations_options[:locales] & Google::Language::Languages.keys : Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s}
           end
-          return retloc
+          retloc ||= (has_many_translations_options[:locales] && I18n && Google) ? (has_many_translations_options[:locales] & Google::Language::Languages.keys) : (Google::Language::Languages.keys & I18n.available_locales.map{|l|l.to_s})
+          if has_many_translations_options[:languages]
+            retloc = retloc.empty? ? has_many_translations_options[:languages] : (has_many_translations_options[:languages] & retloc) 
+          end
           # I18n.available_locales.map(&:to_s)
         end
         
