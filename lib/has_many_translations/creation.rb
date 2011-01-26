@@ -68,6 +68,10 @@ module HasManyTranslations
           @translator.key = Settings.google_api_key
         end
         
+        # def force_on_update?
+        #           return false
+        #         end
+        
         def allowed_locales
           t = TranslationSpec.first(:conditions => {:translated_id => self.id,  :translated_type  => self.class.to_s})
           t.blank? ? nil : t.codes.split(',').map{|c| c.to_sym}
@@ -168,6 +172,7 @@ module HasManyTranslations
              @translator.key = HmtSettings.google_api_key
            end
            translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
+           # TODO: Should this be "find_or_create"?
            translations.create(:model_attribute => attrib, :locale_code => loc.to_s, :value => translation_val, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
         end
         

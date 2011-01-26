@@ -25,7 +25,7 @@ module HasManyTranslations
       include Control
       include Translations
       prepare_translated_options(options)
-      has_many :translations, options, &block
+      has_many :translations, options.merge({:order => "translations.updated_at DESC"}), &block
       
     end
     
