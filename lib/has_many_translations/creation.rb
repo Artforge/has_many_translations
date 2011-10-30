@@ -167,13 +167,18 @@ module HasManyTranslations
         end
         
         def update_translation!(attrib, loc, origin_locale, options = {})
-           @translator ||= Translate::RTranslate.new
-           if defined? HmtSettings
-             @translator.key = HmtSettings.google_api_key
+           @translator ||= ToLang.start(HmtSettings.google_api_key)
+           # if defined? HmtSettings
+           #              @translator.key = HmtSettings.google_api_key
+           #            end
+           # translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
+           unless (loc.to_s ==  origin_locale.to_s)
+             unless try(attrib).nil?
+               translation_val = try(attrib).translate(loc.to_s, :from => origin_locale.to_s)
+               # TODO: Should this be "find_or_create"?
+               translations.create(:model_attribute => attrib, :locale_code => loc.to_s, :value => translation_val, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
+             end
            end
-           translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
-           # TODO: Should this be "find_or_create"?
-           translations.create(:model_attribute => attrib, :locale_code => loc.to_s, :value => translation_val, :locale_name => Google::Language::Languages[loc.to_s], :machine_translation => true, :origin_locale_code => origin_locale ) unless translation_val.nil? || translation_val.match('Error: ')
         end
         
         
