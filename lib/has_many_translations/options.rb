@@ -32,9 +32,10 @@ module HasManyTranslations
         )
         class_inheritable_accessor :has_many_translations_options
         class_inheritable_accessor :translator
-        self.translator = Translate::RTranslate.new
+        # self.translator = Translate::RTranslate.new
         if defined? HmtSettings
-          self.translator.key = HmtSettings.google_api_key
+          ToLang.start(HmtSettings.google_api_key)
+          # self.translator.key = HmtSettings.google_api_key
           options[:default_languages] = HmtSettings.default_languages ? HmtSettings.default_languages : nil
           options[:languages] = HmtSettings.languages ? HmtSettings.languages : nil
           # options[:force_on_update] = HmtSettings.force_on_update ? HmtSettings.force_on_update : nil

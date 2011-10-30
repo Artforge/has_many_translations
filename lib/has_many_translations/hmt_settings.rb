@@ -2,6 +2,7 @@ class HmtSettings
   @@google_api_key = ""
   @@languages = []
   @@default_languages = []
+  @@queue_type = "resque"
   
   def self.google_api_key=(key)
     @@google_api_key = key
@@ -20,5 +21,11 @@ class HmtSettings
   end
   def self.default_languages
     @@default_languages
+  end
+  def self.queue_type=(queue)
+    @@queue_type = queue
+  end
+  def self.queue_type
+    @@queue_type
   end
 end

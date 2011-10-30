@@ -27,6 +27,9 @@ GEM
     gherkin (2.3.3)
       json (~> 1.4.6)
     git (1.2.5)
+    httparty (0.8.1)
+      multi_json
+      multi_xml
     i18n (0.5.0)
     jeweler (1.5.2)
       bundler (~> 1.0.0)
@@ -38,9 +41,8 @@ GEM
       rake (>= 0.8.1)
     mocha (0.9.10)
       rake
-    pickler (0.1.5)
-      activesupport (>= 2.0.0)
-      cucumber (>= 0.8.0)
+    multi_json (1.0.3)
+    multi_xml (0.4.1)
     rake (0.8.7)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
@@ -53,6 +55,8 @@ GEM
     settingslogic (2.0.6)
     shoulda (2.11.3)
     term-ansicolor (1.0.5)
+    to_lang (0.3.1)
+      httparty (~> 0.8.0)
     tzinfo (0.3.23)
 
 PLATFORMS
@@ -67,7 +71,7 @@ DEPENDENCIES
   jeweler
   launchy
   mocha
-  pickler
   rspec
   settingslogic
   shoulda
+  to_lang

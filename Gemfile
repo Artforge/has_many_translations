@@ -1,4 +1,10 @@
 source "http://rubygems.org"
+
+gem 'artforge-rtranslate', '>=1.3.4'
+gem 'to_lang'
+gem 'activequeue'
+gem 'settingslogic'
+
 group :development do
   gem 'activesupport'
   gem 'activerecord'
@@ -7,10 +13,7 @@ group :development do
   gem 'rspec'
   gem 'cucumber'
   gem 'launchy'
-  gem 'pickler'
+  # gem 'pickler'
   gem 'jeweler'
 end
 
-gem 'artforge-rtranslate', '>=1.3.4'
-gem 'activequeue'
-gem 'settingslogic'

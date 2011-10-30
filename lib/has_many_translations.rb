@@ -1,6 +1,6 @@
 Dir[File.join(File.dirname(__FILE__), 'has_many_translations', '*.rb')].each{|f| require f }
 
-require 'rtranslate'
+require 'to_lang'
 require 'activequeue'
 
 # The base module that gets included in ActiveRecord::Base. See the documentation for
