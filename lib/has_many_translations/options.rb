@@ -30,8 +30,10 @@ module HasManyTranslations
           :class_name => 'HasManyTranslations::Translation',
           :dependent => :delete_all
         )
-        class_inheritable_accessor :has_many_translations_options
-        class_inheritable_accessor :translator
+        # class_inheritable_accessor :has_many_translations_options
+        # class_inheritable_accessor :translator
+        class_attribute :has_many_translations_options
+        class_attribute :translator
         # self.translator = Translate::RTranslate.new
         if defined? HmtSettings
           ToLang.start(HmtSettings.google_api_key)
