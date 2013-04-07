@@ -238,7 +238,8 @@ module HasManyTranslations
         end
         
         def queue_translation(loc)
-          ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => HmtSettings.queue_type).enqueue
+          #ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => HmtSettings.queue_type).enqueue
+          ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => "resque").enqueue
         end
         
         def queue_translations
