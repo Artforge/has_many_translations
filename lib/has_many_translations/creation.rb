@@ -174,7 +174,12 @@ module HasManyTranslations
           # translation_val = @translator.translate(try(attrib), :from => origin_locale.to_s, :to => loc.to_s)
           unless (loc.to_s ==  origin_locale.to_s)
             unless try(attrib).nil?
-              translation_val = try(attrib).translate(loc.to_s, :from => origin_locale.to_s)
+              translation_val = "Awaiting Translation" # try(attrib).translate(loc.to_s, :from => origin_locale.to_s)
+              Rails.logger.info("************")
+              # Rails.logger.info(attrib)
+              Rails.logger.info(translation_val)
+              Rails.logger.info(Google::Language::Languages[loc.to_s])
+              Rails.logger.info("************")
               unless translation_val.nil? || translation_val.match('Error: ')
                 t = translations.where(
                 :model_attribute => attrib, 
@@ -183,7 +188,7 @@ module HasManyTranslations
                 :machine_translation => true, 
                 :origin_locale_code => origin_locale 
                 ).first_or_create
-                t.update_attributes({:value => translation_val, })
+                t.update_attributes({:value => translation_val}) if t.value.blank?
               end
             end
           end
@@ -239,7 +244,7 @@ module HasManyTranslations
         
         def queue_translation(loc)
           #ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => HmtSettings.queue_type).enqueue
-          ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => "resque").enqueue
+          ActiveQueue::Job.new(:val => { :translated_id => self.id, :translated_type => self.class.to_s, :origin_locale => self.hmt_locale, :destination_locale => loc },:job_klass => "TranslationJobs::AutoTranslateJob",:adapter => "insta").enqueue
         end
         
         def queue_translations
