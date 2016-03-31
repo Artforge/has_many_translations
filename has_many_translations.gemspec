@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "has_many_translations"
-  s.version = "0.4.9"
+  s.version = "0.4.9.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["OpenGotham", "Artforge"]
@@ -69,11 +69,11 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<launchy>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_runtime_dependency(%q<activerecord>, [">= 2.1.0"])
-      s.add_development_dependency(%q<shoulda>, [">= 0"])
-      s.add_development_dependency(%q<mocha>, [">= 0"])
-      s.add_runtime_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
-      s.add_runtime_dependency(%q<activequeue>, [">= 0"])
-      s.add_runtime_dependency(%q<settingslogic>, [">= 0"])
+      #s.add_development_dependency(%q<shoulda>, [">= 0"])
+      #s.add_development_dependency(%q<mocha>, [">= 0"])
+      #s.add_runtime_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
+      #s.add_runtime_dependency(%q<activequeue>, [">= 0"])
+      #s.add_runtime_dependency(%q<settingslogic>, [">= 0"])
     else
       s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
       s.add_dependency(%q<to_lang>, [">= 0"])
@@ -88,11 +88,11 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<launchy>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<activerecord>, [">= 2.1.0"])
-      s.add_dependency(%q<shoulda>, [">= 0"])
-      s.add_dependency(%q<mocha>, [">= 0"])
-      s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
-      s.add_dependency(%q<activequeue>, [">= 0"])
-      s.add_dependency(%q<settingslogic>, [">= 0"])
+      #s.add_dependency(%q<shoulda>, [">= 0"])
+      #s.add_dependency(%q<mocha>, [">= 0"])
+      #s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
+      #s.add_dependency(%q<activequeue>, [">= 0"])
+      #s.add_dependency(%q<settingslogic>, [">= 0"])
     end
   else
     s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
@@ -108,11 +108,11 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<launchy>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<activerecord>, [">= 2.1.0"])
-    s.add_dependency(%q<shoulda>, [">= 0"])
-    s.add_dependency(%q<mocha>, [">= 0"])
-    s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
-    s.add_dependency(%q<activequeue>, [">= 0"])
-    s.add_dependency(%q<settingslogic>, [">= 0"])
+    #s.add_dependency(%q<shoulda>, [">= 0"])
+    #s.add_dependency(%q<mocha>, [">= 0"])
+    #s.add_dependency(%q<artforge-rtranslate>, [">= 1.3.4"])
+    #s.add_dependency(%q<activequeue>, [">= 0"])
+    #s.add_dependency(%q<settingslogic>, [">= 0"])
   end
 end
 
