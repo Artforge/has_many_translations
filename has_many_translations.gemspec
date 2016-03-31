@@ -100,7 +100,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activequeue>, [">= 0"])
     s.add_dependency(%q<settingslogic>, [">= 0"])
     s.add_dependency(%q<activesupport>, [">= 0"])
-    s.add_dependency(%q<activerecord>, [">= 0"])
+    #s.add_dependency(%q<activerecord>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<mocha>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
